@@ -7,14 +7,19 @@ import bs4
 from urllib.parse import urlparse
 from packaging import version
 
+
+def uparse(target):
+	url = urlparse(target)
+	return url.scheme + "://" + url.netloc # BASE URL
+
 def request(target):
 	UA = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1"
-	headers = {'X-Atlassian-token':'no-check', 'User-Agent':UA}
+	headers = {'X-Atlassian-Token':'no-check', 'User-Agent':UA}
 	try:
 		r = requests.get(target, headers=headers)
 	except Exception as e:
 		print("Problem with the HTTP request.", e, sep="\n")
-		exit(1)
+		exit(1) # https://stackoverflow.com/a/2434619
 
 	if (r.status_code != 200):
 		print("Something went wrong! (STATUS {})".format(r.status_code))
@@ -22,11 +27,10 @@ def request(target):
 			print("HTTP request got redirected. Set this instead: " + r.headers['Location'])
 		exit(1)
 
-	return(r.text)
+	return (r.text)
 
 def isjira(target): # reckless check but ok
-	url = urlparse(target)
-	target = url.scheme + "://" + url.netloc
+	target = uparse(target)
 	response = request(target)
 	if "jira" in str(response):
 		return True
@@ -34,8 +38,7 @@ def isjira(target): # reckless check but ok
 		return False
 
 def getversion(target): # Jira version appears to be ____
-	url = urlparse(target)
-	target = url.scheme + "://" + url.netloc
+	target = uparse(target)
 	# ENUM TYPE 1
 	f_build = '0.0.0' # default
 	vers = []

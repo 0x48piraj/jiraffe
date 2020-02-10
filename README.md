@@ -14,9 +14,10 @@ Use pip to install **Jiraffe**. This is the recommended way of running Jiraffe.
 $ pip install jiraffe
 ```
 
-#### Options
+#### Usage
 
 ```
+$ py -m jiraffe
 usage: jiraffe [-h] [-t https://example-jira-instance.com]
 
 

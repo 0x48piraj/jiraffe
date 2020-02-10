@@ -1,8 +1,13 @@
 # Jiraffe
 
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/powered-by-responsibility.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/winter-is-coming.svg)](http://forthebadge.com)
+
 <p align="center">
 <b>Jiraffe - One stop place for exploiting all Jira instances in your proximity</b><br><br>
-<img alt="Jiraffe logo" src="static/logo.png" width="400"><br>
+<img alt="Jiraffe logo" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/static/logo.png" width="400"><br>
 See the <a href="#demo">demo</a>
 </p>
 

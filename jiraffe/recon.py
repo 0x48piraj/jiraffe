@@ -21,17 +21,17 @@ def request(target):
 		print("Problem with the HTTP request.", e, sep="\n")
 		exit(1) # https://stackoverflow.com/a/2434619
 
-	if (r.status_code != 200):
-		print("Something went wrong! (STATUS {})".format(r.status_code))
-		if (r.status_code == 302):
-			print("HTTP request got redirected. Set this instead: " + r.headers['Location'])
-		exit(1)
+	# if r.status_code != 200:
+	# 	print("Something went wrong! (STATUS {})".format(r.status_code))
+	# 	if r.status_code == 302:
+	# 		print("HTTP request got redirected. Set this instead: " + r.headers['Location'])
+	# 	exit(1)
 
-	return (r.text)
+	return r, r.text
 
 def isjira(target): # reckless check but ok
 	target = uparse(target)
-	response = request(target)
+	res, response = request(target)
 	if "jira" in str(response):
 		return True
 	else:
@@ -43,25 +43,21 @@ def getversion(target): # Jira version appears to be ____
 	f_build = '0.0.0' # default
 	vers = []
 	final_version = ""
-	target = target + url.path if "/login.jsp" in url.path else target + '/login.jsp'
-	response = request(target)
+	target = target + urlparse(target).path if "/login.jsp" in urlparse(target).path else target + '/login.jsp'
+	res, response = request(target)
 	soup = bs4.BeautifulSoup(response, "html.parser")
-	
-	print("Checking for version ...")
 	try:
 		vers = vers + [item["data-version"] for item in soup.find_all() if "data-version" in item.attrs] # ajs tags
 		f_build = soup.find("span", {"id": "footer-build-information"}).get_text() # Login page footer
 		vers.append(f_build.split("#")[0]) # grabbing & appending the version
 	except:
 		pass
-	print(vers)
 	# finalize the version
 	try:
 		for n, i in enumerate(vers):
 			vers[n] = version.parse(i)
-		print(vers)
 		final_version = str(max(vers))
 	except Exception as e:
-		final_version = '0.0.0' # if fails
+		final_version = False # if fails
 
 	return final_version

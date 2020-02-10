@@ -6,6 +6,38 @@
 See the <a href="#demo">demo</a>
 </p>
 
+## Installation
+
+Use pip to install **Jiraffe**. This is the recommended way of running Jiraffe.
+
+```
+$ pip install jiraffe
+```
+
+#### Options
+
+```
+usage: jiraffe [-h] [-t https://example-jira-instance.com]
+
+
+                                                                           /)/)
+                                                                          ( ..\
+      ___  __      _______        __       _______   _______   _______    /'-._)
+     |"  ||" \    /"      \      /""\     /"     "| /"     "| /"     "|  /#/
+     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @0x48piraj
+     |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |
+  ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_
+ /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:      "|
+(_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
+
+
+Options:
+  -t https://example-jira-instance.com, --target https://example-jira-instance.com
+                        Target Jira Instance URL
+  -v, --verbose         Verbose output
+  -a, --auto            Automatic mode
+
+```
 
 ## Exploits for
 
@@ -16,7 +48,13 @@ See the <a href="#demo">demo</a>
 |  CVE-2019-11581  |  VERY HIGH  |  Atlassian JIRA Template injection vulnerability RCE  |  Jira < 7.6.14  |  [CVE-2019-11581](https://lmgtfy.com/?q=CVE-2019-11581)  |
 |  CVE-2019-8451  |  HIGH  |  Pre-authentication server side request forgery (SSRF) vulnerability found in the /plugins/servlet/gadgets/makeRequest resource.  |  Jira == 7.6.0  && Jira.7.6.0 < 7.13.9, 8.4.0  |  [CVE-2019-8451](https://lmgtfy.com/?q=CVE-2019-8451)  |
 
+Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulnerability, where attacker can abuse a specific functionality on the server to read or update internal resources. The attacker can supply or a modify a URL which the code running on the server will read or submit data to, and by carefully selecting the URLs, the attacker may be able to read server configuration such as AWS metadata, connect to internal services like HTTP enabled databases or perform post requests towards internal services which are not intended to be exposed.
+
+For further exploitation, I'll most likely write some post exploitation scripts for vendor specifc deployments.
+
 ## Reconnaissance
+
+#### Jira version detection
 
 If unauthenticated, one can access Confluence's landing page and retrieve version information from these places:
 

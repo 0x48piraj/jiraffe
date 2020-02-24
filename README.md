@@ -3,7 +3,6 @@
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/powered-by-responsibility.svg)](http://forthebadge.com)
-[![forthebadge](http://forthebadge.com/images/badges/winter-is-coming.svg)](http://forthebadge.com)
 
 <p align="center">
 <b>Jiraffe - One stop place for exploiting all Jira instances in your proximity</b><br><br>
@@ -96,5 +95,5 @@ If unauthenticated, one can access Confluence's landing page and retrieve versio
 
 ## References
 
-- [RCE in Jira (CVE-2019–11581)](https://medium.com/@ruvlol/rce-in-jira-cve-2019-11581-901b845f0f)
+- [RCE in Jira (CVE-2019-11581)](https://medium.com/@ruvlol/rce-in-jira-cve-2019-11581-901b845f0f)
 - [One Misconfig (JIRA) to Leak Them All- Including NASA and Hundreds of Fortune 500 Companies!](https://medium.com/@logicbomb_1/one-misconfig-jira-to-leak-them-all-including-nasa-and-hundreds-of-fortune-500-companies-a70957ef03c7)

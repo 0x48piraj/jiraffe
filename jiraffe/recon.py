@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import requests
+import requests, socket
 import re
 import bs4
 from urllib.parse import urlparse
@@ -33,6 +33,13 @@ def isjira(target): # reckless check but ok
 	target = uparse(target)
 	res, response = request(target)
 	if "jira" in str(response):
+		return True
+	else:
+		return False
+
+def isaws(target):
+	data = socket.gethostbyaddr(target)
+	if "amazonaws" in str(data):
 		return True
 	else:
 		return False

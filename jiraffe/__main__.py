@@ -77,12 +77,13 @@ def main():
 			if vs:
 				print(style.GREEN("[+] Jira version detected: {}").format(style.UNDERLINE(vs) + style.RESET('')) + style.RESET(''))
 			else:
-				print(style.GREEN("[-] Jira version detection failed.") + style.RESET(''))
+				print(style.RED("[-] Jira version detection failed.") + style.RESET(''))
 			print(style.YELLOW("[*] Launching all attacks ...") + style.RESET(''))
 			# should launch based on version
 			cve2019_8451(target)
 			cve2017_9506(target)
 			cve2019_8449(target)
+			cve2019_11581(target)
 	else:
 			print(style.YELLOW("[*] Mode not provided, invoking interactive mode ..."))
 			print("[*] Choose the exploit ..." + style.RESET(''))

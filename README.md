@@ -56,12 +56,20 @@ Options:
 
 Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulnerability, where attacker can abuse a specific functionality on the server to read or update internal resources. The attacker can supply or a modify a URL which the code running on the server will read or submit data to, and by carefully selecting the URLs, the attacker may be able to read server configuration such as AWS metadata, connect to internal services like HTTP enabled databases or perform post requests towards internal services which are not intended to be exposed.
 
-For further exploitation, I'll most likely write some post exploitation scripts for vendor specifc deployments.
+Currently, some of the Amazon AWS credentials leak attacks are present. Interesting URL to look for at http://169.254.169.254 &mdash; [Instance Metadata and User Data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
+
+##### URL Paths Jiraffe Currently Supports:
+```
+/latest/meta-data/{hostname,public-ipv4,...}
+User data : /latest/user-data
+Temporary AWS credentials : /latest/meta-data/iam/security-credentials/
+```
+
+Feel free to implement more post exploitation modules for vendor specifc deployments. Take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances)
 
 ## Demo
 
-
-
+Coming soon.
 
 ## Internal Workings
 

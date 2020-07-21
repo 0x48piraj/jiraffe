@@ -57,7 +57,7 @@ Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulne
 
 Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances)
 
-##### URL Paths Jiraffe Currently Supports:
+##### URL paths Jiraffe currently supports:
 ```
 Root Path: /latest/meta-data/{hostname,public-ipv4,...}
 User Data : /latest/user-data
@@ -92,8 +92,11 @@ If unauthenticated, one can access Confluence's landing page and retrieve versio
 
 ![](https://confluence.atlassian.com/confkb/files/980460833/982321522/1/1576094162892/Screen+Shot+2019-12-11+at+16.55.54.png)
 
+#### Reconnaissance &mdash; AWS platform detection
+
+Jiraffe uses `gethostbyaddr()` to get the host name corresponding to target's IP address and then utilizes pattern searching to detect AWS.
 
 ## References
 
 - [RCE in Jira (CVE-2019-11581)](https://medium.com/@ruvlol/rce-in-jira-cve-2019-11581-901b845f0f)
-- [One Misconfig (JIRA) to Leak Them All- Including NASA and Hundreds of Fortune 500 Companies!](https://medium.com/@logicbomb_1/one-misconfig-jira-to-leak-them-all-including-nasa-and-hundreds-of-fortune-500-companies-a70957ef03c7)
+- [One Misconfig (JIRA) to Leak Them All - Including NASA and Hundreds of Fortune 500 Companies!](https://medium.com/@logicbomb_1/one-misconfig-jira-to-leak-them-all-including-nasa-and-hundreds-of-fortune-500-companies-a70957ef03c7)

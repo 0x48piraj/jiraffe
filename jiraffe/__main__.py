@@ -6,7 +6,7 @@ from .recon import request, isjira, getversion
 from .exploits import *
 
 def main():
-	if sys.platform.lower() == "win32":
+	if any(x in sys.platform.lower() for x in ['linux', 'linux2', 'win32']): # hotfix/issue#5
 	    os.system('color')
 	  # Group of Different functions for different styles
 	    class style():

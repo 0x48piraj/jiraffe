@@ -49,12 +49,15 @@ def main():
 	optional = parser._action_groups.pop() # popped opt args
 	optional = parser.add_argument_group('Options')
 	optional.add_argument("-t", "--target", dest="target", metavar=style.CYAN("https://example-jira-instance.com") + style.RESET(''), default=False, help= style.GREEN("Target Jira Instance URL") + style.RESET(''))
+	optional.add_argument("-w", "--wordlist", dest="wordlist", action='store_true', help=style.GREEN("Path to Wordlist") + style.RESET(''))
 	optional.add_argument("-v", "--verbose", dest="verbose", action='store_true', help= style.GREEN("Verbose output") + style.RESET(''))
 	optional.add_argument("-a", "--auto", dest="automatic", action='store_true', help= style.GREEN("Automatic mode") + style.RESET(''))
 
 	verbose = parser.parse_args().verbose
 	target = parser.parse_args().target
 	auto = parser.parse_args().automatic
+	if parser.parse_args().wordlist:
+		wordlist = parser.parse_args().wordlist
 	print(style.GREEN(banner) + style.RESET(''))
 	try:
 	    if target == False:
@@ -84,6 +87,7 @@ def main():
 			cve2017_9506(target)
 			cve2019_8449(target)
 			cve2019_11581(target)
+			cve2020_14181(target, wordlist)
 	else:
 			print(style.YELLOW("[*] Mode not provided, invoking interactive mode ..."))
 			print("[*] Choose the exploit ..." + style.RESET(''))
@@ -92,7 +96,8 @@ def main():
 				'1. CVE-2017-9506 [HIGH]\n'
 				'2. CVE-2019-8449 [LOW]\n'
 				'3. CVE-2019-8451 [HIGH]\n'
-				'4. CVE-2019-11581 [CRITICAL]'
+				'4. CVE-2019-11581 [CRITICAL]\n'
+				'5. CVE-2020-14181 [LOW]'
 			)
 			print(style.GREEN(EXMSG) + style.RESET(''))
 			exploit = input(style.GREEN("    ----> ") + style.RESET('')).strip()
@@ -109,6 +114,13 @@ def main():
 					cve2019_11581(target, command)
 				else:
 					cve2019_11581(target)
+			elif exploit == '5':
+				print("[*] Input a wordlist")
+				wordlist = input("Enter the Path to the wordlist: ")
+				if wordlist:
+					cve2020_14181(target, wordlist)
+				else:
+					print(style.RED("[-] No Wordlist selected. cannot perform exploit"))
 			else:
 				print(style.RED("[-] Invalid option selected. Quitting.") + style.RESET(''))
 

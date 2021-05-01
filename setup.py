@@ -32,5 +32,6 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
+    install_requires=["requests", "beautifulsoup4", "packaging"],
     entry_points={"console_scripts": ["jiraffe=jiraffe.__main__:main"]},
 )

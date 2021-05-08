@@ -1,27 +1,75 @@
 # Jiraffe
 
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
-[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
-[![forthebadge](http://forthebadge.com/images/badges/powered-by-responsibility.svg)](http://forthebadge.com)
+<a href="https://github.com/0x48piraj/Jiraffe/releases">
+  <img src="https://img.shields.io/github/release/0x48piraj/Jiraffe.svg">
+</a>
+<a href="https://pypi.python.org/pypi/Jiraffe/">
+  <img src="https://img.shields.io/pypi/v/Jiraffe.svg">
+</a>
+<a href="https://github.com/0x48piraj/Jiraffe/issues?q=is%3Aissue+is%3Aclosed">
+  <img src="https://img.shields.io/github/issues-closed-raw/0x48piraj/Jiraffe?color=dark-green&label=issues%20fixed">
+</a>
+<!-- 
+<a href="https://travis-ci.com/0x48piraj/Jiraffe">
+    <img src="https://img.shields.io/travis/com/0x48piraj/Jiraffe.svg?color=dark-green&label=tests">
+</a>
+ -->
 
 <p align="center">
-<b>Jiraffe - One stop place for exploiting all Jira instances in your proximity</b><br><br>
-<img alt="Jiraffe logo" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/static/logo.png" width="400"><br>
-See the <a href="#demo">demo</a>
+<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/jiraffe-cover.png" width="400"><br>
+<b>Jiraffe - One stop place for exploiting all Jira instances in your proximity</b><br>
 </p>
+
+<p align="center">
+  <a href="#installation">Installation</a>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#usage">Usage</a>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#demonstration">Demo</a>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/0x48piraj/Jiraffe/wiki/">Documentation</a>
+</p>
+
+## Features
+
+Jiraffe is a semi-automatic security tool written for exploiting Jira instances.
+
+**What's included?**
+
+- Interactive shell
+- Modular core
+- Pre-built exploits _(see the table below)_
+- Intelligent payload generator
+- Jira instance, Amazon AWS platform detection and banner grabbing
+- Pre-configured AWS Credentials & User Data Extraction
+
 
 ## Installation
 
 Use pip to install **Jiraffe**. This is the recommended way of running Jiraffe.
 
-```
+```shell
 $ pip install jiraffe
 ```
 
+or, installing from the source by running
+
+```shell
+# clone the repo
+$ git clone https://github.com/0x48piraj/jiraffe.git
+
+# change the working directory to jiraffe
+$ cd jiraffe
+
+# install the jiraffe python package
+$ python3 setup.py install
+```
+
+
 #### Usage
 
-```
-$ py -m jiraffe
+```python
+$ python3 -m jiraffe
 usage: jiraffe [-h] [-t https://example-jira-instance.com]
 
 
@@ -44,7 +92,8 @@ Options:
 
 ```
 
-## Exploits for
+
+## Exploits
 
 |  CVE  |  Impact  |  Description  |  Version Affected  |  Details  |
 |---|---|---|---|---|
@@ -55,48 +104,32 @@ Options:
 
 Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulnerability, where attacker can abuse a specific functionality on the server to read or update internal resources. The attacker can supply or a modify a URL which the code running on the server will read or submit data to, and by carefully selecting the URLs, the attacker may be able to read server configuration such as AWS metadata, connect to internal services like HTTP enabled databases or perform post requests towards internal services which are not intended to be exposed.
 
-Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances)
+Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances). Feel free to implement more post exploitation modules for vendor specifc deployments. For looking under the hood, read [wiki](https://github.com/0x48piraj/Jiraffe/wiki/Internals).
 
-##### URL paths Jiraffe currently supports:
+
+## Demonstration
+
+![Jiraffe Demo](https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/demo.gif)
+
+
+## Tests
+
+The tests are next to the package i.e. tests are not part of the package, only of the repository. The reason is simply to keep the package small.
+
+**Running the unit tests**
+
+```shell
+$ python3 -m unittest --verbose # Python 3 and up
 ```
-Root Path: /latest/meta-data/{hostname,public-ipv4,...}
-User Data : /latest/user-data
-AWS Credentials : /latest/meta-data/iam/security-credentials/
-```
 
-Feel free to implement more post exploitation modules for vendor specifc deployments.
 
-## Demo
+## DISCLAMER
 
-![Jiraffe Demo](https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/static/demo.gif)
+This project is a [personal development](https://en.wikipedia.org/wiki/Personal_development). Please respect it's philosophy and don't use it for evil purposes. By using Jiraffe, you agree to the MIT license included in the repository. For more details at [The MIT License &mdash; OpenSource](https://opensource.org/licenses/MIT).
 
-## Internal Workings
+Using Jiraffe for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program.
 
-#### Reconnaissance &mdash; Jira version detection
 
-If unauthenticated, one can access Confluence's landing page and retrieve version information from these places:
+## Licensing
 
-- Login page footer.
-
-![](https://confluence.atlassian.com/confkb/files/980460833/980460769/1/1574450271730/Screen+Shot+2019-11-22+at+14.25.48.png)
-
-- Response Head AJS Tags.
-
-![](https://confluence.atlassian.com/confkb/files/980460833/980460798/1/1574450271658/Screen+Shot+2019-11-22+at+15.07.51.png)
-
-- Response Body What's New Link.
-
-![](https://confluence.atlassian.com/confkb/files/980460833/980460799/1/1574450271373/Screen+Shot+2019-11-22+at+15.10.01.png)
-
-- Response Body Confluence Help Link.
-
-![](https://confluence.atlassian.com/confkb/files/980460833/982321522/1/1576094162892/Screen+Shot+2019-12-11+at+16.55.54.png)
-
-#### Reconnaissance &mdash; AWS platform detection
-
-Jiraffe uses `gethostbyaddr()` to get the host name corresponding to target's IP address and then utilizes pattern searching to detect AWS.
-
-## References
-
-- [RCE in Jira (CVE-2019-11581)](https://medium.com/@ruvlol/rce-in-jira-cve-2019-11581-901b845f0f)
-- [One Misconfig (JIRA) to Leak Them All - Including NASA and Hundreds of Fortune 500 Companies!](https://medium.com/@logicbomb_1/one-misconfig-jira-to-leak-them-all-including-nasa-and-hundreds-of-fortune-500-companies-a70957ef03c7)
+This project is licensed under the MIT license.

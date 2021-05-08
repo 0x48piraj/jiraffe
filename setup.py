@@ -15,7 +15,7 @@ with open(os.path.join(pwd, "README.md")) as f:
 # call to setup()
 setup(
     name="jiraffe",
-    version="2.0.3",
+    version="2.0.5",
     description="One stop place for exploiting all Jira instances in your proximity.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -25,8 +25,6 @@ setup(
     license="BSD-3",
     classifiers=[
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],

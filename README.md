@@ -1,10 +1,13 @@
 # Jiraffe
 
+<a href="https://pypi.python.org/pypi/Jiraffe/">
+  <img src="https://img.shields.io/pypi/v/Jiraffe.svg">
+</a>
 <a href="https://github.com/0x48piraj/Jiraffe/releases">
   <img src="https://img.shields.io/github/release/0x48piraj/Jiraffe.svg">
 </a>
 <a href="https://pypi.python.org/pypi/Jiraffe/">
-  <img src="https://img.shields.io/pypi/v/Jiraffe.svg">
+  <img src="https://img.shields.io/pypi/dm/jiraffe.svg?color=dark-green">
 </a>
 <a href="https://github.com/0x48piraj/Jiraffe/issues?q=is%3Aissue+is%3Aclosed">
   <img src="https://img.shields.io/github/issues-closed-raw/0x48piraj/Jiraffe?color=dark-green&label=issues%20fixed">
@@ -16,7 +19,7 @@
  -->
 
 <p align="center">
-<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/jiraffe-cover.png" width="400"><br>
+<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/jiraffe-cover.png"><br>
 <b>Jiraffe - One stop place for exploiting all Jira instances in your proximity</b><br>
 </p>
 
@@ -109,7 +112,9 @@ Currently, some of the common Amazon AWS credentials leak attacks are present wi
 
 ## Demonstration
 
-![Jiraffe Demo](https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/demo.gif)
+<p align="center">
+<img alt="Jiraffe Demo" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/demo.gif">
+</p>
 
 
 ## Tests

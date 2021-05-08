@@ -12,11 +12,9 @@
 <a href="https://github.com/0x48piraj/Jiraffe/issues?q=is%3Aissue+is%3Aclosed">
   <img src="https://img.shields.io/github/issues-closed-raw/0x48piraj/Jiraffe?color=dark-green&label=issues%20fixed">
 </a>
-<!-- 
-<a href="https://travis-ci.com/0x48piraj/Jiraffe">
-    <img src="https://img.shields.io/travis/com/0x48piraj/Jiraffe.svg?color=dark-green&label=tests">
+<a href="https://github.com/0x48piraj/Jiraffe/tree/master/tests">
+    <img src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/cov.svg">
 </a>
- -->
 
 <p align="center">
 <img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/jiraffe-cover.png"><br>

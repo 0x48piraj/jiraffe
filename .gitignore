@@ -47,4 +47,5 @@ Session.vim
 .netrwhist
 *~
 
-/Jiraffe/*.bak
+/jiraffe/*.bak
+build-scripts

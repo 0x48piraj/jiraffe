@@ -10,7 +10,16 @@ from packaging import version
 
 def uparse(target):
 	url = urlparse(target)
-	return url.scheme + "://" + url.netloc + url.path if url.path else "" # BASE URL
+	if url.path:
+		if url.path == "/":
+			print("[-] Target URL doesn't seems to be correct.\n\t\tValid Target URL Paths: http(s)://target.com/.../(login.action;/view.action;/viewpage.action;/releaseview.action;/aboutconfluencepage.action;/secure/Dashboard.jspa)")
+			return url.scheme + "://" + url.netloc + url.path
+		else:
+			return url.scheme + "://" + url.netloc + url.path
+		return 
+	else:
+		print("[-] Target URL doesn't seems to be correct.\n\t\tValid Target URL Paths: http(s)://target.com/.../(login.action;/view.action;/viewpage.action;/releaseview.action;/aboutconfluencepage.action;/secure/Dashboard.jspa)")
+		return url.scheme + "://" + url.netloc
 
 def request(target):
 	UA = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1"
@@ -18,11 +27,11 @@ def request(target):
 	try:
 		r = requests.get(target, headers=headers)
 	except Exception as e:
-		print("Problem with the HTTP request.", e, sep="\n")
+		print("[-] Problem with the HTTP request.", e, sep="\n")
 		if r.status_code != 200:
-			print("Something went wrong! (STATUS {})".format(r.status_code))
+			print("[-] Something went wrong! (STATUS {})".format(r.status_code))
 			if r.status_code == 302:
-				print("HTTP request got redirected. Set this instead: " + r.headers['Location'])
+				print("[*] HTTP request got redirected. Set this instead: " + r.headers['Location'])
 		exit(1) # https://stackoverflow.com/a/2434619
 
 	return r, r.text
@@ -37,7 +46,8 @@ def isjira(target):
 		return False
 
 def isaws(target):
-	data = socket.gethostbyaddr(target)
+	target = urlparse(target)
+	data = socket.gethostbyaddr(target.netloc)
 	if "amazonaws" in str(data):
 		return True
 	else:
@@ -48,7 +58,6 @@ def getversion(target): # ENUM #1: Jira version appears to be ____
 	f_build = '0.0.0' # default
 	vers = []
 	final_version = ""
-	target = target + urlparse(target).path if "/login.jsp" in urlparse(target).path else target + '/login.jsp'
 	res, response = request(target)
 	soup = bs4.BeautifulSoup(response, "html.parser")
 	try:

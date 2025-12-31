@@ -95,6 +95,11 @@ def main():
     parser.add_argument("--ssrf", help="SSRF target URL")
 
     parser.add_argument(
+        "--user-agent",
+        help="Custom User-Agent header",
+    )
+
+    parser.add_argument(
         "--severity",
         choices=[s.value for s in Severity],
         help="Run only exploits of this severity",
@@ -140,7 +145,10 @@ def main():
         print(Style.RED("[-] Invalid target URL."))
         sys.exit(1)
 
-    client = HttpClient(verify_ssl=not args.insecure)
+    client = HttpClient(
+        verify_ssl=not args.insecure,
+        user_agent=args.user_agent or "Jiraffe/2.x",
+    )
 
     if not isjira(target, client):
         print(Style.RED("[-] Target does not appear to be Jira."))

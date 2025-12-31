@@ -1,0 +1,12 @@
+# Include top-level project files
+include README.md
+include LICENSE
+include requirements.txt
+include setup.cfg
+include setup.py
+
+# Include tests
+recursive-include tests *
+
+# Exclude compiled or unnecessary files
+global-exclude *.py[cod] __pycache__ *.so *.dll

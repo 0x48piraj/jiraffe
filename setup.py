@@ -7,26 +7,36 @@ from setuptools import setup, find_packages
 """Setup script for jiraffe"""
 
 pwd = os.path.abspath(os.path.dirname(__file__))
-# README file
+# README
 with open(os.path.join(pwd, "README.md")) as f:
     README = f.read()
     f.close()
 
-# call to setup()
+# call setup
 setup(
     name="jiraffe",
-    version="2.0.6",
+    version="2.1.0",
     description="One stop place for exploiting all Jira instances in your proximity.",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/0x48piraj/jiraffe",
     author="Piyush Raj <0x48piraj>",
     author_email="piyush@linuxmail.org",
-    license="BSD-3",
+    license="MIT",
     classifiers=[
-        "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3",
+        "Intended Audience :: Developers",
+        "Development Status :: 5 - Production/Stable",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
+        "License :: OSI Approved :: MIT License"
     ],
     packages=find_packages(),
     include_package_data=True,

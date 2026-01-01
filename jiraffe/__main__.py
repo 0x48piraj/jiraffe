@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 from jiraffe import __version__
 from jiraffe.style import Style
 from jiraffe.http import HttpClient
-from jiraffe.exploits import ALL_EXPLOITS
+from jiraffe.exploits import load_exploits
 from jiraffe.recon import isjira, getversion, uparse
 from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
@@ -33,6 +33,7 @@ BANNER = textwrap.dedent(rf'''
  /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       | 
 (_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
 ''')
+ALL_EXPLOITS = load_exploits()
 
 def validate_target(url: str) -> bool:
     parsed = urlparse(url)

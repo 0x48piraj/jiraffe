@@ -5,6 +5,7 @@ import sys
 import socket
 import re
 import bs4
+from requests import RequestException
 from urllib.parse import urlparse, urljoin
 from packaging import version as pkg_version
 from typing import Optional
@@ -42,13 +43,20 @@ def uparse(target: str) -> str:
         return target
     return f"{url.scheme}://{url.netloc}{url.path or ''}"
 
-def isjira(target, client):
+def isjira(target, client) -> bool:
     r = client.get(target)
-    return (
-        "ajs-" in r.text
-        or "atlassian-footer" in r.text
-        or "jira" in r.text.lower()
+
+    # Network / TLS failure
+    if isinstance(r, RequestException):
+        return False
+
+    indicators = (
+        "ajs-" in r.text,
+        "atlassian-token" in r.text,
+        "jira" in r.text.lower()
     )
+
+    return sum(indicators) >= 1
 
 def isaws(target: str) -> bool:
     """

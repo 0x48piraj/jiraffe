@@ -131,9 +131,10 @@ def getversion(target, client=None):
     try:
         if client:
             r = client.get(urljoin(target, "/rest/api/2/serverInfo"))
-            data = r.json()
-            if "version" in data:
-                candidates.append(data["version"])
+            if not isinstance(r, Exception) and r.status_code == 200:
+                data = r.json()
+                if "version" in data:
+                    candidates.append(data["version"])
     except Exception:
         pass
 

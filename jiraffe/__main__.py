@@ -17,7 +17,8 @@ from jiraffe import __version__
 from jiraffe.style import Style
 from jiraffe.http import HttpClient
 from jiraffe.exploits import load_exploits
-from jiraffe.recon import isjira, getversion, uparse
+from jiraffe.recons import load_recon_modules
+from jiraffe.common import isjira, getversion, uparse, get_deployment_type, host_info, color_severity
 from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
 
@@ -34,6 +35,7 @@ BANNER = textwrap.dedent(rf'''
 (_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
 ''')
 ALL_EXPLOITS = load_exploits()
+ALL_RECONS = load_recon_modules()
 
 def validate_target(url: str) -> bool:
     parsed = urlparse(url)
@@ -49,19 +51,38 @@ def list_exploits():
         )
     sys.exit(0)
 
-def interactive_exploit_menu(exploits):
-    print(Style.YELLOW("[*] Choose the exploit...\n"))
+def build_module_list(exploits, recons):
+    modules = []
 
-    for i, exp in enumerate(exploits, 1):
+    for r in recons:
+        modules.append(("recon", r))
+
+    for e in exploits:
+        modules.append(("exploit", e))
+
+    return modules
+
+def interactive_module_menu(modules):
+    print(Style.YELLOW("\n[*] Available Modules\n"))
+
+    for i, (mtype, cls) in enumerate(modules, 1):
+        label = Style.CYAN("RECON") if mtype == "recon" else Style.ORANGE("EXPLOIT")
+
+        name = cls.name if mtype == "recon" else cls.cve
+        severity = cls.severity.value
+        severity_color = color_severity(severity)
+
         print(
-            f"{i}. {exp.cve} "
-            f"[{exp.severity.value}]"
+            f"{Style.YELLOW(f'{i:>2}.')} "
+            f"[{label:<7}] "
+            f"[{severity_color(severity):<8}] "
+            f"{Style.RESET(name)}"
         )
 
     try:
-        choice = input("\n----> ").strip()
+        choice = input(Style.YELLOW("\n----> ")).strip()
         idx = int(choice) - 1
-        return exploits[idx]
+        return modules[idx]
     except KeyboardInterrupt:
         print(Style.RED("Interrupted."))
         sys.exit(0)
@@ -132,7 +153,7 @@ def main():
         list_exploits()
 
     # Interactive target input
-    target = uparse(args.target)
+    target = args.target
     try:
         if not target:
             print(Style.YELLOW("[*] Target not provided, invoking interactive mode..."))
@@ -151,6 +172,14 @@ def main():
         user_agent=args.user_agent or "Jiraffe/2.x",
     )
 
+    target = uparse(target).rstrip("/")
+
+    ip, rdns = host_info(target)
+    if ip:
+        print(Style.GREEN("[+] Target IP: ") + Style.CYAN(ip))
+    if rdns:
+        print(Style.GREEN("[+] Reverse DNS: ") + Style.CYAN(rdns))
+
     if not isjira(target, client):
         print(Style.RED("[-] Target does not appear to be Jira."))
         sys.exit(1)
@@ -158,6 +187,10 @@ def main():
     jira_version = getversion(target, client)
     if jira_version:
         print(Style.GREEN("[+] Jira version detected: ") + Style.MAGENTA(jira_version))
+
+    deployment = get_deployment_type(target, client)
+    if deployment:
+        print(Style.GREEN("[+] Deployment type: ") + Style.MAGENTA(deployment))
 
     selected = ALL_EXPLOITS
 
@@ -171,43 +204,70 @@ def main():
 
     # AUTO MODE
     if args.auto:
-        exploit_classes = selected
+        modules = build_module_list(ALL_EXPLOITS, ALL_RECONS)
 
     # INTERACTIVE MODE
     else:
-        exploit_cls = interactive_exploit_menu(selected)
-        if not exploit_cls:
-            sys.exit(1)
-        exploit_classes = [exploit_cls]
+        modules = build_module_list(ALL_EXPLOITS, ALL_RECONS)
 
-    # Exploit execution
-    for exploit_cls in exploit_classes:
-        if jira_version and not is_compatible(exploit_cls.cve, jira_version):
-            print(
-                Style.YELLOW(
-                    f"[!] {exploit_cls.cve} may not be compatible with Jira {jira_version}"
-                )
+        selected_module = interactive_module_menu(modules)
+        if not selected_module:
+            sys.exit(1)
+
+        modules = [selected_module]
+
+    # Module execution
+    for mtype, module_cls in modules:
+        if mtype == "recon":
+            recon = module_cls(
+                client,
+                target,
+                verbose=args.verbose
             )
 
-        kwargs = {
-            "verbose": args.verbose,
-            "check_only": args.check_only,
-        }
+            recon.banner()
+            found = recon.run()
 
-        if args.ssrf:
-            kwargs["ssrf_target"] = args.ssrf
+            results.append({
+                "type": "recon",
+                "name": recon.name,
+                "severity": recon.severity.value,
+                "found": bool(found),
+            })
 
-        if exploit_cls.cve == "CVE-2019-11581" and args.cmd:
-            kwargs["command"] = args.cmd
+        else: # exploit
+            if jira_version and not is_compatible(module_cls.cve, jira_version):
+                print(
+                    Style.YELLOW(
+                        f"[!] {module_cls.cve} may not be compatible with Jira {jira_version}"
+                    )
+                )
 
-        exploit = exploit_cls(client, target, **kwargs)
-        ok = exploit.run()
+            kwargs = {
+                "verbose": args.verbose,
+                "check_only": args.check_only,
+            }
 
-        results.append({
-            "cve": exploit.cve,
-            "severity": exploit.severity.value,
-            "vulnerable": bool(ok),
-        })
+            if args.ssrf:
+                kwargs["ssrf_target"] = args.ssrf
+
+            if module_cls.cve == "CVE-2019-11581" and args.cmd:
+                kwargs["command"] = args.cmd
+
+            try:
+                exploit = module_cls(client, target, **kwargs)
+            except ValueError as e:
+                print(Style.RED(f"[-] {e}"))
+                continue
+
+            ok = exploit.run()
+
+            results.append({
+                "type": "exploit",
+                "cve": exploit.cve,
+                "severity": exploit.severity.value,
+                "vulnerable": bool(ok),
+            })
 
     if args.json:
         print(json.dumps({

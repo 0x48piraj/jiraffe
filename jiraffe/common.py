@@ -44,10 +44,9 @@ def uparse(target: str) -> str:
     return f"{url.scheme}://{url.netloc}{url.path or ''}"
 
 def isjira(target, client) -> bool:
-    r = client.get(target)
-
-    # Network / TLS failure
-    if isinstance(r, RequestException):
+    try:
+        r = client.get(target)
+    except RequestException: # Network / TLS failure
         return False
 
     indicators = (
@@ -56,7 +55,7 @@ def isjira(target, client) -> bool:
         "jira" in r.text.lower()
     )
 
-    return sum(indicators) >= 1
+    return sum(indicators) >= 2
 
 def isaws(target: str) -> bool:
     """
@@ -130,7 +129,7 @@ def getversion(target, client=None):
     # REST fallback (works on many versions)
     try:
         if client:
-            r = client.get(urljoin(target, "/rest/api/2/serverInfo"))
+            r = client.get(f"{target}/rest/api/2/serverInfo")
             if not isinstance(r, Exception) and r.status_code == 200:
                 data = r.json()
                 if "version" in data:

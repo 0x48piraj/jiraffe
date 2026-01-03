@@ -37,6 +37,15 @@ def normalize_version(raw: str) -> Optional[str]:
 
     return match.group(1)
 
+def color_severity(sev):
+    return {
+        "INFO": Style.CYAN,
+        "LOW": Style.GREEN,
+        "MEDIUM": Style.YELLOW,
+        "HIGH": Style.RED,
+        "CRITICAL": Style.MAGENTA,
+    }.get(sev, Style.RESET)
+
 def uparse(target: str) -> str:
     url = urlparse(target)
     if not url.scheme or not url.netloc:
@@ -44,6 +53,10 @@ def uparse(target: str) -> str:
     return f"{url.scheme}://{url.netloc}{url.path or ''}"
 
 def host_info(target: str):
+    """
+    Host resolution helper.
+    Returns (ip, rdns) tuple or (None, None) on failure.
+    """
     try:
         host = urlparse(target).netloc
         ip = socket.gethostbyname(host)
@@ -53,6 +66,10 @@ def host_info(target: str):
         return None, None
 
 def isjira(target: str, client) -> bool:
+    """
+    Best-effort Jira detection.
+    Heuristic only: may return false negatives.
+    """
     try:
         r = client.get(target)
     except RequestException: # Network / TLS failure
@@ -101,6 +118,19 @@ def isaws(target: str, client) -> bool:
 
     except Exception:
         return False
+
+def get_deployment_type(target: str, client):
+    """
+    Jira deployment type detection.
+    Returns deployment type string or None.
+    """
+    try:
+        r = client.get(f"{target}/rest/api/2/serverInfo")
+        if r.status_code == 200:
+            return r.json().get("deploymentType")
+    except Exception:
+        pass
+    return None
 
 def getversion(target: str, client=None):
     """

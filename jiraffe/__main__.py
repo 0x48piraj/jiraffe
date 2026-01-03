@@ -63,7 +63,7 @@ def build_module_list(exploits, recons):
     return modules
 
 def interactive_module_menu(modules):
-    print(Style.YELLOW("\n[*] Available Modules\n"))
+    print(Style.YELLOW("\n[*] Available modules\n"))
 
     for i, (mtype, cls) in enumerate(modules, 1):
         label = Style.CYAN("RECON") if mtype == "recon" else Style.ORANGE("EXPLOIT")
@@ -97,12 +97,12 @@ def main():
         usage=(
             Style.GREEN("jiraffe ")
             + Style.YELLOW("[-h] [-t {}]").format(
-                Style.UNDERLINE("https://example-jira-instance.com")
+                Style.UNDERLINE("https://jira.company.com")
             )
         ),
     )
 
-    parser.add_argument("-t", "--target", help=Style.GREEN("Target Jira Instance URL"), metavar=Style.CYAN("https://example-jira-instance.com"), default=False)
+    parser.add_argument("-t", "--target", help=Style.GREEN("Target Jira instance URL"), metavar=Style.CYAN("https://jira.company.com"), default=False)
     parser.add_argument("-a", "--auto", action="store_true", help=Style.MAGENTA("Automatic mode"))
 
     parser.add_argument(
@@ -157,8 +157,8 @@ def main():
     try:
         if not target:
             print(Style.YELLOW("[*] Target not provided, invoking interactive mode..."))
-            print("[*] Enter the target Jira instance URL (https://example-jira-instance.com)")
-            target = input(Style.GREEN("    ----> ")).strip()
+            print("[?] Enter the target Jira instance URL (e.g. https://jira.company.com)")
+            target = input(Style.YELLOW("    ----> ")).strip()
     except KeyboardInterrupt:
         print(Style.RED("Interrupted."))
         sys.exit(0)

@@ -20,3 +20,4 @@ class Style:
     WHITE = staticmethod(lambda x: Style._wrap("37", x))
     UNDERLINE = staticmethod(lambda x: Style._wrap("4", x))
     RESET = staticmethod(lambda x: "\033[0m" + str(x))
+    ORANGE = staticmethod(lambda x: Style._wrap("38;5;208", x))

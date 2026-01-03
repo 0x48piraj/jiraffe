@@ -107,6 +107,49 @@ Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulne
 
 Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances). Feel free to implement more post exploitation modules for vendor specifc deployments. For looking under the hood, read [wiki](https://github.com/0x48piraj/Jiraffe/wiki/Internals).
 
+## Reconnaissance modules
+
+In addition to exploits, Jiraffe includes a modular **reconnaissance (auxiliary) framework** for structured information gathering and weak-signal detection.
+
+Recon modules are **non-exploit** checks designed to identify conditions that may enable or influence exploitation, without actively attacking the target.
+
+### What recon modules cover
+
+Recon modules typically fall into one of the following categories:
+
+- **Unauthenticated access checks:**  
+  Endpoints or resources accessible without authentication.
+
+- **Information disclosure:**  
+  Version leaks, configuration exposure, banners, metadata, or other passive signals.
+
+- **Misconfiguration / weak settings:**  
+  Insecure defaults, exposed services, or deployment weaknesses.
+
+### Architecture
+
+Recon modules live under:
+
+```
+jiraffe/recons/
+```
+
+Each module is implemented as a subclass of `ReconModule`, providing a consistent interface and lifecycle similar to exploit modules, while remaining strictly separated from exploitation logic.
+
+This auxiliary-style design allows reconnaissance to scale independently, reusing the same modular discovery model as exploits without coupling reconnaissance to exploitation.
+
+### Contributing recon modules
+
+Adding a new recon module is simple:
+
+1. Create a new Python file under `jiraffe/recons/`
+2. Implement a subclass of `ReconModule`
+3. Define metadata (`name`, `severity`, `description`)
+4. Implement the `run()` method
+
+No changes to core logic or registries are required — modules are discovered dynamically at runtime.
+
+This makes it easy to contribute new reconnaissance checks without impacting existing exploits or execution flow.
 
 ## Demonstration
 

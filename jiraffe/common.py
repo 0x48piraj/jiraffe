@@ -6,7 +6,7 @@ import socket
 import re
 import bs4
 from requests import RequestException
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 from packaging import version as pkg_version
 from typing import Optional
 from jiraffe.style import Style
@@ -43,7 +43,16 @@ def uparse(target: str) -> str:
         return target
     return f"{url.scheme}://{url.netloc}{url.path or ''}"
 
-def isjira(target, client) -> bool:
+def host_info(target: str):
+    try:
+        host = urlparse(target).netloc
+        ip = socket.gethostbyname(host)
+        rdns = socket.gethostbyaddr(ip)[0]
+        return ip, rdns
+    except Exception:
+        return None, None
+
+def isjira(target: str, client) -> bool:
     try:
         r = client.get(target)
     except RequestException: # Network / TLS failure
@@ -57,7 +66,7 @@ def isjira(target, client) -> bool:
 
     return sum(indicators) >= 2
 
-def isaws(target: str) -> bool:
+def isaws(target: str, client) -> bool:
     """
     Best-effort AWS hosting detection.
     Heuristic only: may return false negatives.
@@ -65,15 +74,22 @@ def isaws(target: str) -> bool:
     try:
         host = urlparse(target).netloc
 
-        # Reverse DNS
-        try:
-            rdns = socket.gethostbyaddr(host)[0]
-            if "amazonaws" in rdns.lower():
-                return True
-        except Exception:
-            pass
+        # DNS / RDNS signal
+        ip, rdns = host_info(target)
+        if rdns and "amazonaws" in rdns.lower():
+            return True
 
-        # Direct hostname hints
+        # HTTP Server header (ALB / ELB)
+        if client:
+            try:
+                r = client.get(target)
+                server = r.headers.get("Server", "").lower()
+                if server.startswith("awselb"):
+                    return True
+            except Exception:
+                pass
+
+        # Hostname heuristics
         if any(x in host.lower() for x in (
             "amazonaws",
             "elb.amazonaws",
@@ -86,7 +102,7 @@ def isaws(target: str) -> bool:
     except Exception:
         return False
 
-def getversion(target, client=None):
+def getversion(target: str, client=None):
     """
     Best-effort Jira version detection.
     Returns string version or None.
@@ -154,7 +170,7 @@ def getversion(target, client=None):
         return normalized[0]
 
 # Shared AWS SSRF menu
-def aws_ssrf_menu(target, client):
+def aws_ssrf_menu(target: str, client):
     base = target.rstrip("/")
 
     print(Style.YELLOW("[*] AWS SSRF helper"))

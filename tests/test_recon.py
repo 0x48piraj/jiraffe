@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from jiraffe.recon import uparse, getversion, isjira, isaws
+from jiraffe.common import uparse, getversion, isjira, isaws
 from jiraffe.http import HttpClient
 
 
@@ -43,12 +43,12 @@ class TestReconUtilities(unittest.TestCase):
         isaws() should detect known AWS EC2 hostnames.
         """
         data = "https://ec2-3-91-23-45.compute-1.amazonaws.com"
-        result = isaws(data)
+        result = isaws(data, self.client)
         self.assertTrue(result)
 
     def test_isaws_returns_boolean(self):
         """
         isaws() should always return a boolean value.
         """
-        result = isaws("https://example.com")
+        result = isaws("https://example.com", self.client)
         self.assertIsInstance(result, bool)

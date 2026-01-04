@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from jiraffe.common import uparse, getversion, isjira, isaws
+from jiraffe.common import (
+    uparse,
+    getversion,
+    isjira,
+    isaws
+)
 from jiraffe.http import HttpClient
 
 

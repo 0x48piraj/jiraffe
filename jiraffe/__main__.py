@@ -4,7 +4,6 @@
 import sys
 import argparse
 import json
-import textwrap
 
 # version guard
 if sys.version_info[0] < 3:
@@ -18,7 +17,14 @@ from jiraffe.style import Style
 from jiraffe.http import HttpClient
 from jiraffe.exploits import load_exploits
 from jiraffe.recons import load_recon_modules
-from jiraffe.common import isjira, getversion, uparse, get_deployment_type, host_info, color_severity
+from jiraffe.common import (
+    isjira,
+    getversion,
+    uparse,
+    get_deployment_type,
+    host_info,
+    color_severity
+)
 from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
 

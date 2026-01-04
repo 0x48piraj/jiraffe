@@ -85,6 +85,7 @@ $ python3 setup.py install
 #### Usage
 
 ```python
+$ python3 -m jiraffe --help
 
 usage: jiraffe [-h] [-t https://jira.company.com]
 
@@ -117,6 +118,10 @@ optional arguments:
   --json                Output results in JSON format (for automation / scripting)
   --insecure            Disable TLS certificate verification (allow self-signed HTTPS)
   -v, --verbose         Enable verbose output (debug information)
+
+$ python3 -m jiraffe -t https://jira.example.com
+$ python3 -m jiraffe -t https://jira.example.com --auto
+$ python3 -m jiraffe --list-exploits
 ```
 
 ## Supported vulnerabilities
@@ -175,6 +180,9 @@ At least one of the following must be true:
 
 **Notes**  
 Successful exploitation allows arbitrary code execution on the Jira application host, resulting in full system compromise.
+
+**Reference**  
+- Atlassian Advisory: JRASERVER-69532
 
 </details>
 

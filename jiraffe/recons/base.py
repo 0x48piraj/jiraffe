@@ -4,6 +4,7 @@
 from abc import ABC, abstractmethod
 from jiraffe.enums import Severity
 from jiraffe.style import Style
+from jiraffe.common import color_severity
 
 
 class ReconModule(ABC):
@@ -17,10 +18,11 @@ class ReconModule(ABC):
         self.verbose = verbose
 
     def banner(self):
+        severity_color = color_severity(self.severity.value)
         print(
-            Style.CYAN(
-                f"[*] {self.name} [{self.severity.value}]"
-            )
+            f"{Style.YELLOW(f'[*] Running:')} "
+            f"{Style.RESET(self.name)} "
+            f"[{severity_color(self.severity.value):<8}]"
         )
 
     @abstractmethod

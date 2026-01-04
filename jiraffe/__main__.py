@@ -43,11 +43,13 @@ def validate_target(url: str) -> bool:
 
 def list_exploits():
     print("Available exploits:\n")
-    for exp in ALL_EXPLOITS:
+    for i, exp in enumerate(ALL_EXPLOITS, 1):
+        severity_color = color_severity(exp.severity.value)
         print(
-            f"- {exp.cve:<18} "
-            f"[{exp.severity.value:<8}] "
-            f"{exp.description}"
+            f"{Style.YELLOW(f'{i:>2}.')} "
+            f"[{severity_color(exp.severity.value):<8}] "
+            f"{Style.RESET(exp.cve)}: "
+            f"{Style.CYAN(exp.description)}"
         )
     sys.exit(0)
 

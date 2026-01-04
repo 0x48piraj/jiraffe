@@ -23,17 +23,19 @@ from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
 
 
-BANNER = textwrap.dedent(rf'''
-                                                                           /)/)
-                                                                          ( ..\    
-      ___  __      _______        __       _______   _______   _______    /'-._)
-     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v{__version__}
-     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @03C0
-     |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |   
-  ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_  
- /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       | 
-(_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
-''')
+BANNER = (
+Style.GREEN("                                                                           /)/)\n")
++ Style.GREEN("                                                                          ( ..\   \n")
++ Style.GREEN("      ___  __      _______        __       _______   _______   _______    /'-._)\n")
++ Style.GREEN("     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ ")
++ Style.CYAN(f"v{__version__}\n")
++ Style.GREEN("     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  ")
++ Style.ORANGE("@03C0\n")
++ Style.GREEN("     |:  ||:  |  |_____/   )   /  /\  \   \/    |   \/    |   \/    |   \n")
++ Style.GREEN("  ___|  / |.  |   //      /   // '__'  \  // ___)   // ___)   // ___)_   \n")
++ Style.GREEN(" /  :|_/ )/\  |\ |:  __   \  /   /  \\   \(:  (     (:  (     (:       |\n")
++ Style.GREEN("(_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)\n")
+)
 ALL_EXPLOITS = load_exploits()
 ALL_RECONS = load_recon_modules()
 
@@ -95,7 +97,7 @@ def interactive_module_menu(modules):
 def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=Style.GREEN(BANNER),
+        description=BANNER,
         usage=(
             Style.GREEN("jiraffe ")
             + Style.YELLOW("[-h] [-t {}]").format(
@@ -104,8 +106,8 @@ def main():
         ),
     )
 
-    parser.add_argument("-t", "--target", help=Style.GREEN("Target Jira instance URL"), metavar=Style.CYAN("https://jira.company.com"), default=False)
-    parser.add_argument("-a", "--auto", action="store_true", help=Style.MAGENTA("Automatic mode"))
+    parser.add_argument("-t", "--target", help=Style.YELLOW("Target Jira instance URL"), metavar=Style.CYAN("https://jira.company.com"), default=False)
+    parser.add_argument("-a", "--auto", action="store_true", help=Style.YELLOW("Automatic mode"))
 
     parser.add_argument(
         "--check-only", "--dry-run",
@@ -125,7 +127,7 @@ def main():
 
     parser.add_argument(
         "--severity",
-        choices=[s.value for s in Severity],
+        choices=[color_severity(s.value)(s.value) for s in Severity],
         help="Run only exploits of this severity",
     )
 
@@ -149,7 +151,7 @@ def main():
 
     args = parser.parse_args()
 
-    print(Style.GREEN(BANNER) + Style.RESET(""))
+    print(BANNER)
 
     if args.list_exploits:
         list_exploits()
@@ -240,9 +242,9 @@ def main():
         else: # exploit
             if jira_version and not is_compatible(module_cls.cve, jira_version):
                 print(
-                    Style.YELLOW(
-                        f"[!] {module_cls.cve} may not be compatible with Jira {jira_version}"
-                    )
+                    f"[!] {Style.RESET(module_cls.cve)} "
+                    f"{Style.CYAN('may not be compatible with Jira')} "
+                    f"{Style.YELLOW(jira_version)}"
                 )
 
             kwargs = {

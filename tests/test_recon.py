@@ -7,6 +7,12 @@ from jiraffe.http import HttpClient
 
 
 class TestReconUtilities(unittest.TestCase):
+    """
+    Recon-level tests using real network targets.
+
+    These tests validate heuristic behavior against
+    known public services and must tolerate failure.
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -14,41 +20,42 @@ class TestReconUtilities(unittest.TestCase):
 
     def test_uparse_preserves_valid_url(self):
         """
-        uparse() should return a normalized URL
-        without altering a valid Jira path.
+        uparse() should not modify a valid Jira URL
+        during reconnaissance.
         """
         data = "https://jira.atlassian.com/secure/Dashboard.jspa"
-        result = uparse(data)
-        self.assertEqual(result, data)
+        self.assertEqual(uparse(data), data)
 
     def test_getversion_returns_string_or_none(self):
         """
-        getversion() should return a semantic version string
-        or None if version detection fails.
+        getversion() should return either a semantic
+        version string or None during recon.
         """
         data = "https://jira.atlassian.com/secure/Dashboard.jspa"
         result = getversion(data, self.client)
+
         self.assertTrue(result is None or isinstance(result, str))
 
     def test_isjira_detects_jira_instance(self):
         """
-        isjira() should correctly identify a Jira instance.
+        isjira() should positively identify
+        a known Jira instance.
         """
         data = "https://jira.atlassian.com/secure/Dashboard.jspa"
-        result = isjira(data, self.client)
-        self.assertTrue(result)
+        self.assertTrue(isjira(data, self.client))
 
-    def test_isaws_known_aws_hostname(self):
+    def test_isaws_detects_known_aws_hostname(self):
         """
-        isaws() should detect known AWS EC2 hostnames.
+        isaws() should detect known AWS EC2 hostnames
+        during reconnaissance.
         """
         data = "https://ec2-3-91-23-45.compute-1.amazonaws.com"
-        result = isaws(data, self.client)
-        self.assertTrue(result)
+        self.assertTrue(isaws(data, self.client))
 
-    def test_isaws_returns_boolean(self):
+    def test_isaws_always_returns_boolean(self):
         """
-        isaws() should always return a boolean value.
+        isaws() should never raise and must
+        always return a boolean value.
         """
         result = isaws("https://example.com", self.client)
         self.assertIsInstance(result, bool)

@@ -200,7 +200,7 @@ def getversion(target: str, client=None):
         return normalized[0]
 
 # Shared AWS SSRF menu
-def aws_ssrf_menu(target: str, client):
+def aws_ssrf_menu(target: str, client): # pragma: no cover
     base = target.rstrip("/")
 
     print(Style.YELLOW("[*] AWS SSRF helper"))

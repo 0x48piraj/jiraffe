@@ -1,23 +1,23 @@
 # Jiraffe 🦒
 
-<a href="https://pypi.python.org/pypi/Jiraffe/">
+<a href="https://pypi.python.org/pypi/jiraffe/">
   <img src="https://img.shields.io/pypi/v/Jiraffe.svg">
 </a>
-<a href="https://github.com/0x48piraj/Jiraffe/releases">
+<a href="https://github.com/0x48piraj/jiraffe/releases">
   <img src="https://img.shields.io/github/release/0x48piraj/Jiraffe.svg">
 </a>
-<a href="https://pypi.python.org/pypi/Jiraffe/">
+<a href="https://pypi.python.org/pypi/jiraffe/">
   <img src="https://img.shields.io/pypi/dm/jiraffe.svg?color=dark-green">
 </a>
-<a href="https://github.com/0x48piraj/Jiraffe/issues?q=is%3Aissue+is%3Aclosed">
+<a href="https://github.com/0x48piraj/jiraffe/issues?q=is%3Aissue+is%3Aclosed">
   <img src="https://img.shields.io/github/issues-closed-raw/0x48piraj/Jiraffe?color=dark-green&label=issues%20fixed">
 </a>
-<a href="https://github.com/0x48piraj/Jiraffe/tree/master/tests">
-    <img src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/cov.svg">
+<a href="https://github.com/0x48piraj/jiraffe/tree/master/tests">
+    <img src="https://codecov.io/gh/0x48piraj/jiraffe/branch/master/graph/badge.svg">
 </a>
 
 <p align="center">
-<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/jiraffe-cover.png"><br>
+<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/jiraffe-cover.png"><br>
 <b>Jiraffe 🦒 - One stop place for Jira security reconnaissance and exploitation in your proximity</b><br>
 </p>
 
@@ -28,7 +28,7 @@
   &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#demonstration">Demo</a>
   &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/0x48piraj/Jiraffe/wiki/">Documentation</a>
+  <a href="https://github.com/0x48piraj/jiraffe/wiki/">Documentation</a>
 </p>
 
 Jiraffe is a modern Jira security reconnaissance & exploitation framework for identifying misconfigurations, exposed APIs, and vulnerable components in Atlassian Jira deployments.
@@ -188,7 +188,7 @@ Successful exploitation allows arbitrary code execution on the Jira application 
 
 Majority of the bugs stated above poses Server-Side Request Forgery (SSRF) vulnerability, where attacker can abuse a specific functionality on the server to read or update internal resources. The attacker can supply or a modify a URL which the code running on the server will read or submit data to, and by carefully selecting the URLs, the attacker may be able to read server configuration such as AWS metadata, connect to internal services like HTTP enabled databases or perform post requests towards internal services which are not intended to be exposed.
 
-Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances). Feel free to implement more post exploitation modules for vendor specifc deployments. For looking under the hood, read [wiki](https://github.com/0x48piraj/Jiraffe/wiki/Internals).
+Currently, some of the common Amazon AWS credentials leak attacks are present with an additional **Custom Payload Option** for sending crafted payloads for any cloud platform (Amazon AWS, Google Cloud, etc.). For sending custom payloads, take help from [PayloadsAllTheThings &mdash; SSRF URL for Cloud Instances](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#ssrf-url-for-cloud-instances). Feel free to implement more post exploitation modules for vendor specifc deployments. For looking under the hood, read [wiki](https://github.com/0x48piraj/jiraffe/wiki/Internals).
 
 ## Reconnaissance modules
 
@@ -239,7 +239,7 @@ This makes it easy to contribute new reconnaissance checks without impacting exi
 Below is a typical Jiraffe workflow showing target detection, reconnaissance, and controlled exploit validation.
 
 <p align="center">
-<img alt="Jiraffe Demo" src="https://raw.githubusercontent.com/0x48piraj/Jiraffe/master/assets/demo.gif">
+<img alt="Jiraffe Demo" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/demo.gif">
 </p>
 
 

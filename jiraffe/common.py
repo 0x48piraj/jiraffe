@@ -125,7 +125,7 @@ def get_deployment_type(target: str, client):
     Returns deployment type string or None.
     """
     try:
-        r = client.get(f"{target}/rest/api/2/serverInfo")
+        r = client.get(f"{target}/rest/api/latest/serverInfo")
         if r.status_code == 200:
             return r.json().get("deploymentType")
     except Exception:
@@ -175,7 +175,7 @@ def getversion(target: str, client=None):
     # REST fallback (works on many versions)
     try:
         if client:
-            r = client.get(f"{target}/rest/api/2/serverInfo")
+            r = client.get(f"{target}/rest/api/latest/serverInfo")
             if not isinstance(r, Exception) and r.status_code == 200:
                 data = r.json()
                 if "version" in data:

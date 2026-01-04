@@ -3,6 +3,7 @@
 
 from jiraffe.recons.base import ReconModule
 from jiraffe.enums import Severity
+from jiraffe.style import Style
 
 
 class DevModeEnabled(ReconModule):
@@ -14,7 +15,7 @@ class DevModeEnabled(ReconModule):
         r = self.client.get(self.target)
 
         if '<meta name="ajs-dev-mode" content="true">' in r.text:
-            print("[+] Jira dev mode enabled")
+            print(Style.GREEN("[+] Jira dev mode enabled"))
             return True
 
         return False

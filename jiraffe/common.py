@@ -42,7 +42,7 @@ def color_severity(sev):
         "INFO": Style.CYAN,
         "LOW": Style.GREEN,
         "MEDIUM": Style.YELLOW,
-        "HIGH": Style.RED,
+        "HIGH": Style.ORANGE,
         "CRITICAL": Style.MAGENTA,
     }.get(sev, Style.RESET)
 

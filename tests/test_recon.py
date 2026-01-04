@@ -26,7 +26,7 @@ class TestReconUtilities(unittest.TestCase):
         getversion() should return a semantic version string
         or None if version detection fails.
         """
-        data = "https://jira.atlassian.com"
+        data = "https://jira.atlassian.com/secure/Dashboard.jspa"
         result = getversion(data, self.client)
         self.assertTrue(result is None or isinstance(result, str))
 
@@ -34,7 +34,7 @@ class TestReconUtilities(unittest.TestCase):
         """
         isjira() should correctly identify a Jira instance.
         """
-        data = "https://jira.atlassian.com"
+        data = "https://jira.atlassian.com/secure/Dashboard.jspa"
         result = isjira(data, self.client)
         self.assertTrue(result)
 

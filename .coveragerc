@@ -1,0 +1,10 @@
+[coverage:run]
+omit =
+    jiraffe/exploits/*
+    jiraffe/recons/*
+    jiraffe/__main__.py
+
+[coverage:report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == "__main__":

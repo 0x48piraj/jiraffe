@@ -81,7 +81,6 @@ $ cd jiraffe
 $ python3 setup.py install
 ```
 
-
 #### Usage
 
 ```python
@@ -123,6 +122,19 @@ $ python3 -m jiraffe -t https://jira.example.com
 $ python3 -m jiraffe -t https://jira.example.com --auto
 $ python3 -m jiraffe --list-exploits
 ```
+
+## Documentation
+
+Detailed documentation is available over the [wiki](https://github.com/0x48piraj/jiraffe/wiki), including:
+
+* [Architecture & Execution Flow](https://github.com/0x48piraj/jiraffe/wiki/Architecture-&-Execution-Flow)
+* [Recon Module Development](https://github.com/0x48piraj/jiraffe/wiki/Recon-Module-Development)
+* [Exploit Module Lifecycle](https://github.com/0x48piraj/jiraffe/wiki/Exploit-Module-Lifecycle)
+* [Severity Handling & Filtering](https://github.com/0x48piraj/jiraffe/wiki/Exploit-Module-Lifecycle#severity-handling)
+* [Machine-Readable Output & Automation](https://github.com/0x48piraj/jiraffe/wiki/Machine%E2%80%90readable-Output-&-Automation)
+* [Reporting & Usage](https://github.com/0x48piraj/jiraffe/blob/master/security.md)
+* [Supported CVEs & Validation](https://github.com/0x48piraj/jiraffe/wiki/Supported-CVEs-&-Validation)
+* [Threat Model](https://github.com/0x48piraj/jiraffe/wiki/Threat-Model)
 
 ## Supported vulnerabilities
 

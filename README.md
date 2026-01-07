@@ -183,7 +183,7 @@ Detailed documentation is available over the [wiki](https://github.com/0x48piraj
 
 **POC**
 
-[![Watch the video](https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/CVE_2019_11581/thumbnail.jpg)](https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/CVE_2019_11581/POC.mp4)
+<video src="https://github.com/user-attachments/assets/8e4a85eb-520f-4607-84a9-9f5128b16255" width="352" height="720"></video>
 
 **Component(s)**  
 - ContactAdministrators action  

@@ -170,7 +170,7 @@ Detailed documentation is available over the [wiki](https://github.com/0x48piraj
 | CVE-2019-3403 | LOW | - | Unauthenticated REST user enumeration | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-3403) |
 | CVE-2019-8442 | LOW | - | Jira Maven `POM.xml` disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8442) |
 | CVE-2019-8443 | LOW | - | Jira Maven `POM.xml` disclosure via alternate path | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8443) |
-| CVE-2019-8449 | LOW | 2.1 – 8.3.4 | Unauthenticated username enumeration via GroupUserPicker API | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8449) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69796) |
+| CVE-2019-8449 | LOW | 2.1 - 8.3.4 | Unauthenticated username enumeration via GroupUserPicker API | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8449) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69796) |
 | CVE-2019-8451 | HIGH | >=7.6.0,<7.13.9 and >=8.0.0,<8.4.0 | Pre-authenticated SSRF via gadgets `makeRequest` | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8451) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69793) |
 | CVE-2020-14178 | LOW | - | Unauthenticated project existence disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-14178) |
 | CVE-2020-14179 | LOW | - | QueryComponent disclosure via `QueryComponent!Default.jspa` resource | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-14179) |

@@ -8,14 +8,14 @@ from setuptools import setup, find_packages
 
 pwd = os.path.abspath(os.path.dirname(__file__))
 # README
-with open(os.path.join(pwd, "README.md")) as f:
+with open(os.path.join(pwd, "README.md"), encoding="utf-8") as f:
     README = f.read()
     f.close()
 
 # call setup
 setup(
     name="jiraffe",
-    version="2.1.5",
+    version="2.2.0",
     description="One stop place for exploiting all Jira instances in your proximity.",
     long_description=README,
     long_description_content_type="text/markdown",

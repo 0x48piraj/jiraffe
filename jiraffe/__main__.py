@@ -50,7 +50,7 @@ def validate_target(url: str) -> bool:
     return parsed.scheme in ("http", "https") and bool(parsed.netloc)
 
 def list_exploits():
-    print("Available exploits:\n")
+    print(Style.YELLOW("[*] Available exploits:\n"))
     for i, exp in enumerate(ALL_EXPLOITS, 1):
         severity_color = color_severity(exp.severity.value)
         print(
@@ -73,7 +73,7 @@ def build_module_list(exploits, recons):
     return modules
 
 def interactive_module_menu(modules):
-    print(Style.YELLOW("\n[*] Available modules\n"))
+    print(Style.YELLOW("[*] Available modules\n"))
 
     for i, (mtype, cls) in enumerate(modules, 1):
         label = Style.CYAN("RECON") if mtype == "recon" else Style.ORANGE("EXPLOIT")

@@ -138,17 +138,52 @@ Detailed documentation is available over the [wiki](https://github.com/0x48piraj
 * [Supported CVEs & Validation](https://github.com/0x48piraj/jiraffe/wiki/Supported-CVEs-&-Validation)
 * [Threat Model](https://github.com/0x48piraj/jiraffe/wiki/Threat-Model)
 
+## Recon modules
+
+| Module | Severity | Summary |
+|--------|----------|---------|
+| Jira Dev Mode Enabled | LOW | Detects whether Jira development mode is enabled, which may expose debug functionality |
+| Query Component Field Disclosure | LOW | Identifies exposed Query Component fields accessible without authentication |
+| Service Desk Signup Enabled | MEDIUM | Checks for publicly accessible Service Desk signup that may allow unauthorized account creation |
+| Unauthenticated Admin Menu | INFO | Detects presence of the admin menu without authentication |
+| Unauthenticated Dashboards | INFO | Enumerates dashboards accessible without authentication |
+| Unauthenticated Gadget Configuration | LOW | Identifies exposed gadget configuration endpoints |
+| Unauthenticated Group Picker | INFO | Checks for unauthenticated access to group picker functionality |
+| Unauthenticated Popular Filters | INFO | Enumerates popular filters accessible without authentication |
+| Unauthenticated Project Categories | LOW | Identifies exposed project categories via unauthenticated access |
+| Unauthenticated Projects API | LOW | Enumerates projects using the unauthenticated Projects API |
+| Unauthenticated Resolutions API | INFO | Detects unauthenticated access to issue resolutions |
+| Unauthenticated Screens API | LOW | Identifies exposed Screens API endpoints |
+| Unauthenticated User Picker | INFO | Checks for unauthenticated access to user picker functionality |
+| User Registration Enabled | MEDIUM | Detects whether unauthenticated user self‑registration is enabled |
+
 ## Supported vulnerabilities
 
 | CVE | Severity | Affected | Summary | References |
 |-----|----------|----------|---------|------------|
-| CVE-2017-9506 | HIGH | < 7.3.5 | OAuth `IconUriServlet` SSRF leading to internal resource access | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2017-9506) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-65862) |
-| CVE-2019-8449 | LOW | 2.1 - 8.3.4 | Unauthenticated username enumeration via `groupuserpicker` | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8449) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69796) |
-| CVE-2019-11581 | CRITICAL | < 7.6.14 | Velocity template injection leading to RCE | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-11581) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69532) |
+| CVE-2017-9506 | HIGH | < 7.3.5 | OAuth `IconUriServlet` SSRF leading to internal network access and XSS | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2017-9506) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-65862) |
+| CVE-2018-20824 | HIGH | - | Wallboard dashboard XSS | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2018-20824) |
+| CVE-2018-5230 | HIGH | - | Reflected XSS via Velocity template (`.vm`) | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2018-5230) |
+| CVE-2019-11581 | CRITICAL | < 7.6.14 | Velocity template injection leading to remote code execution (RCE) | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-11581) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69532) |
+| CVE-2019-3396 | CRITICAL | - | Tinymce macro read-only path traversal | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-3396) |
+| CVE-2019-3402 | HIGH | - | Labels gadget XSS | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-3402) |
+| CVE-2019-3403 | LOW | - | Unauthenticated REST user enumeration | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-3403) |
+| CVE-2019-8442 | LOW | - | Jira Maven `POM.xml` disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8442) |
+| CVE-2019-8443 | LOW | - | Jira Maven `POM.xml` disclosure via alternate path | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8443) |
+| CVE-2019-8449 | LOW | 2.1 – 8.3.4 | Unauthenticated username enumeration via GroupUserPicker API | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8449) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69796) |
 | CVE-2019-8451 | HIGH | >=7.6.0,<7.13.9 and >=8.0.0,<8.4.0 | Pre-authenticated SSRF via gadgets `makeRequest` | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2019-8451) · [Atlassian](https://jira.atlassian.com/browse/JRASERVER-69793) |
+| CVE-2020-14178 | LOW | - | Unauthenticated project existence disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-14178) |
+| CVE-2020-14179 | LOW | - | QueryComponent disclosure via `QueryComponent!Default.jspa` resource | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-14179) |
+| CVE-2020-14181 | LOW | - | User hover disclosure via `ViewUserHover.jspa` resource | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-14181) |
+| CVE-2020-36287 | LOW | - | Gadget preferences brute-force disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-36287) |
+| CVE-2020-36289 | MEDIUM | - | `QueryComponentRendererValue` information disclosure | [NVD](https://nvd.nist.gov/vuln/detail/CVE-2020-36289) |
 
 <details>
 <summary><strong>CVE-2019-11581: Server-side Template Injection (RCE)</strong></summary>
+
+**POC**
+
+[![Watch the video](https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/CVE_2019_11581/thumbnail.jpg)](https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/CVE_2019_11581/POC.mp4)
 
 **Component(s)**  
 - ContactAdministrators action  

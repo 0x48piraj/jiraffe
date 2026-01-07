@@ -17,7 +17,7 @@
 </a>
 
 <p align="center">
-<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/jiraffe-cover.png"><br>
+<img alt="Jiraffe" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/demo.gif"><br>
 <b>Jiraffe 🦒 - One stop place for Jira security reconnaissance and exploitation in your proximity</b><br>
 </p>
 
@@ -39,15 +39,15 @@ Built for security professionals who care about correctness, signal quality, and
 
 Jiraffe is a semi-automatic security assessment framework designed for real-world Jira deployments.
 
-**What's included?**
+### Highlights
 
 - Modular recon & exploit framework
 - Passive reconnaissance modules (unauthenticated access checks, information disclosure, and misconfiguration detection)
-- CVE validation with safe defaults
-- AWS SSRF helpers (metadata, IAM, custom targets)
+- CVE validation with safe defaults and compatibility gating
+- Interactive & automatic execution mode with AWS SSRF helpers (metadata, IAM, custom targets)
 - Jira version & deployment detection
 - Cloud vs Server/DC awareness to avoid invalid or misleading checks
-- JSON output for scripting and CI pipelines
+- Structured JSON output for scripting and CI pipelines
 
 Jiraffe follows a **recon-first, exploit-second** model with strict separation between discovery and exploitation, keeping assessments accurate and controlled.
 
@@ -78,7 +78,9 @@ $ git clone https://github.com/0x48piraj/jiraffe.git
 $ cd jiraffe
 
 # install the jiraffe python package
-$ python3 setup.py install
+$ python3 setup.py install --user
+# or, the modern way
+$ python3 -m pip install .
 ```
 
 #### Usage
@@ -92,7 +94,7 @@ usage: jiraffe [-h] [-t https://jira.company.com]
                                                                            /)/)
                                                                           ( ..\
       ___  __      _______        __       _______   _______   _______    /'-._)
-     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v2.1.5
+     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v2.2.0
      ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @03C0
      |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |
   ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_
@@ -251,9 +253,8 @@ This makes it easy to contribute new reconnaissance checks without impacting exi
 Below is a typical Jiraffe workflow showing target detection, reconnaissance, and controlled exploit validation.
 
 <p align="center">
-<img alt="Jiraffe Demo" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/demo.gif">
+<img alt="Jiraffe Demo" src="https://raw.githubusercontent.com/0x48piraj/jiraffe/master/assets/elaborate-demo.gif">
 </p>
-
 
 ## Tests
 

@@ -4,6 +4,7 @@
 import sys
 import argparse
 import json
+import textwrap
 
 # version guard
 if sys.version_info[0] < 3:
@@ -28,20 +29,19 @@ from jiraffe.common import (
 from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
 
-
-BANNER = (
-Style.GREEN(r"                                                                           /)/)\n")
-+ Style.GREEN(r"                                                                          ( ..\   \n")
-+ Style.GREEN(r"      ___  __      _______        __       _______   _______   _______    /'-._)\n")
-+ Style.GREEN(r"     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ ")
-+ Style.CYAN(f"v{__version__}\n")
-+ Style.GREEN(r"     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  ")
-+ Style.ORANGE("@03C0\n")
-+ Style.GREEN(r"     |:  ||:  |  |_____/   )   /  /\  \   \/    |   \/    |   \/    |   \n")
-+ Style.GREEN(r"  ___|  / |.  |   //      /   // '__'  \  // ___)   // ___)   // ___)_   \n")
-+ Style.GREEN(r" /  :|_/ )/\  |\ |:  __   \  /   /  \\   \(:  (     (:  (     (:       |\n")
-+ Style.GREEN(r"(_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)\n")
-)
+BANNER = Style.GREEN(textwrap.dedent(rf'''
+                                                                           /)/)
+                                                                          ( ..\    
+      ___  __      _______        __       _______   _______   _______    /'-._)
+     |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v{__version__}
+     ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @03C0
+     |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |   
+  ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_  
+ /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       | 
+(_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
+'''))
+BANNER = BANNER.replace(f"v{__version__}", Style.CYAN(f"v{__version__}") + Style.GREEN("", reset=False))
+BANNER = BANNER.replace("@03C0", Style.ORANGE("@03C0") + Style.GREEN("", reset=False))
 ALL_EXPLOITS = load_exploits()
 ALL_RECONS = load_recon_modules()
 

@@ -29,15 +29,16 @@ from jiraffe.common import (
 from jiraffe.compat import is_compatible
 from jiraffe.enums import Severity
 
+
 BANNER = Style.GREEN(textwrap.dedent(rf'''
                                                                            /)/)
-                                                                          ( ..\    
+                                                                          ( ..\   
       ___  __      _______        __       _______   _______   _______    /'-._)
      |   ||  \    /       \      /  \     /       | /       | /       |  /#/ v{__version__}
      ||  |||  |  |:        |    /    \   (: ______)(: ______)(: ______) /#/  @03C0
-     |:  ||:  |  |_____/   )   /' /\  \   \/    |   \/    |   \/    |   
-  ___|  / |.  |   //      /   //  __'  \  // ___)   // ___)   // ___)_  
- /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       | 
+     |:  ||:  |  |_____/   )   /  /\  \   \/    |   \/    |   \/    |   
+  ___|  / |.  |   //      /   // '__'  \  // ___)   // ___)   // ___)_   
+ /  :|_/ )/\  |\ |:  __   \  /   /  \\  \(:  (     (:  (     (:       |
 (_______/(__\_|_)|__|  \___)(___/    \___)\__/      \__/      \_______)
 '''))
 BANNER = BANNER.replace(f"v{__version__}", Style.CYAN(f"v{__version__}") + Style.GREEN("", reset=False))

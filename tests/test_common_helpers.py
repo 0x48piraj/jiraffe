@@ -111,7 +111,8 @@ class TestCommonHelpers(unittest.TestCase):
         self.assertIsNone(ip)
         self.assertIsNone(rdns)
 
-    def test_isaws_detects_aws_hostname(self):
+    @patch("jiraffe.common.host_info", return_value=(None, None))
+    def test_isaws_detects_aws_hostname(self, _):
         """
         isaws() should return True when the hostname
         matches known AWS patterns.
@@ -130,7 +131,8 @@ class TestCommonHelpers(unittest.TestCase):
         client = MagicMock()
         self.assertTrue(isaws("https://example.com", client))
 
-    def test_isaws_http_server_header(self):
+    @patch("jiraffe.common.host_info", return_value=(None, None))
+    def test_isaws_http_server_header(self, _):
         """
         isaws() should return True when the HTTP Server
         header indicates an AWS ELB/ALB.
@@ -142,7 +144,8 @@ class TestCommonHelpers(unittest.TestCase):
 
         self.assertTrue(isaws("https://example.com", client))
 
-    def test_isaws_non_aws_target(self):
+    @patch("jiraffe.common.host_info", return_value=(None, None))
+    def test_isaws_non_aws_target(self, _):
         """
         isaws() should return False for non-AWS targets.
         """

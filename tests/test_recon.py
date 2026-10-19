@@ -2,33 +2,26 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from unittest.mock import MagicMock, patch
 from jiraffe.common import (
     uparse,
     getversion,
     isjira,
     isaws
 )
-from jiraffe.http import HttpClient
 
 
 class TestReconUtilities(unittest.TestCase):
     """
-    Recon-level tests using real network targets.
-
-    These tests validate heuristic behavior against
-    known public services and must tolerate failure.
+    Recon-level helper tests using deterministic local responses.
     """
-
-    @classmethod
-    def setUpClass(cls):
-        cls.client = HttpClient()
 
     def test_uparse_preserves_valid_url(self):
         """
         uparse() should not modify a valid Jira URL
         during reconnaissance.
         """
-        data = "https://jira.atlassian.com/secure/Dashboard.jspa"
+        data = "https://jira.example.com/secure/Dashboard.jspa"
         self.assertEqual(uparse(data), data)
 
     def test_getversion_returns_string_or_none(self):
@@ -36,31 +29,44 @@ class TestReconUtilities(unittest.TestCase):
         getversion() should return either a semantic
         version string or None during recon.
         """
-        data = "https://jira.atlassian.com/secure/Dashboard.jspa"
-        result = getversion(data, self.client)
+        data = "https://jira.example.com/secure/Dashboard.jspa"
+        client = MagicMock()
+        response = MagicMock()
+        response.text = "<html><body>No version</body></html>"
+        client.get.return_value = response
 
-        self.assertTrue(result is None or isinstance(result, str))
+        result = getversion(data, client)
+
+        self.assertIsNone(result)
 
     def test_isjira_detects_jira_instance(self):
         """
         isjira() should positively identify
         a known Jira instance.
         """
-        data = "https://jira.atlassian.com/secure/Dashboard.jspa"
-        self.assertTrue(isjira(data, self.client))
+        data = "https://jira.example.com/secure/Dashboard.jspa"
+        client = MagicMock()
+        response = MagicMock()
+        response.text = '<meta name="ajs-version-number" content="8.0.0"> Jira'
+        client.get.return_value = response
+        self.assertTrue(isjira(data, client))
 
-    def test_isaws_detects_known_aws_hostname(self):
+    @patch("jiraffe.common.host_info", return_value=(None, None))
+    def test_isaws_detects_known_aws_hostname(self, _):
         """
         isaws() should detect known AWS EC2 hostnames
         during reconnaissance.
         """
         data = "https://ec2-3-91-23-45.compute-1.amazonaws.com"
-        self.assertTrue(isaws(data, self.client))
+        self.assertTrue(isaws(data, MagicMock()))
 
-    def test_isaws_always_returns_boolean(self):
+    @patch("jiraffe.common.host_info", return_value=(None, None))
+    def test_isaws_always_returns_boolean(self, _):
         """
         isaws() should never raise and must
         always return a boolean value.
         """
-        result = isaws("https://example.com", self.client)
+        client = MagicMock()
+        client.get.side_effect = Exception("unexpected HTTP request")
+        result = isaws("https://example.com", client)
         self.assertIsInstance(result, bool)
